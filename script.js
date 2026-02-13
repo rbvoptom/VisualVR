@@ -16,12 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
         sizeVal.textContent = e.target.value;
     });
 
-    // Iniciar ejercicio
     startBtn.addEventListener('click', () => {
         const type = exerciseType.value;
         const speed = speedInput.value;
         const size = sizeInput.value;
         const duration = durationInput.value;
+        const color = document.getElementById('color').value;
+        const shape = document.getElementById('shape').value;
 
         // Intentar activar pantalla completa
         if (document.documentElement.requestFullscreen) {
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startBtn.style.filter = "hue-rotate(90deg)";
 
         setTimeout(() => {
-            const url = `vr.html?type=${type}&speed=${speed}&size=${size}&duration=${duration}`;
+            const url = `vr.html?type=${type}&speed=${speed}&size=${size}&duration=${duration}&color=${encodeURIComponent(color)}&shape=${shape}`;
             window.location.href = url;
         }, 800);
     });

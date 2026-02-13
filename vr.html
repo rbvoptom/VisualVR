@@ -22,15 +22,18 @@
         .exit-btn {
             position: fixed;
             bottom: 20px;
-            right: 20px;
+            left: 20px;
+            /* Cambiado de right a left */
             z-index: 999;
             background: rgba(255, 0, 0, 0.6);
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 12px;
             cursor: pointer;
             display: none;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -74,12 +77,22 @@
         const speed = parseFloat(urlParams.get('speed')) || 5;
         const size = parseFloat(urlParams.get('size')) || 0.2;
         const duration = parseInt(urlParams.get('duration')) || 60;
+        const color = urlParams.get('color') || '#00f2ff';
+        const shape = urlParams.get('shape') || 'sphere';
 
         const target = document.querySelector('#target');
         const timerDisplay = document.querySelector('#timer');
         const statusDisplay = document.querySelector('#status');
 
-        target.setAttribute('radius', size);
+        // Aplicar forma y color inicial
+        target.setAttribute('geometry', 'primitive', shape);
+        target.setAttribute('color', color);
+        target.setAttribute('material', `shader: standard; emissive: ${color}; emissiveIntensity: 0.5`);
+
+        if (shape === 'sphere') target.setAttribute('radius', size);
+        else if (shape === 'box') target.setAttribute('geometry', { width: size, height: size, depth: size });
+        else if (shape === 'torus') target.setAttribute('geometry', { radius: size, radiusTubular: size / 4 });
+        else if (shape === 'cone') target.setAttribute('geometry', { radiusBottom: size, height: size * 2 });
 
         let startTime = Date.now();
         let frame = 0;
@@ -123,10 +136,7 @@
                 const z = -3 + Math.sin(t) * 2.5;
                 target.setAttribute('position', `0 1.6 ${z}`);
                 statusDisplay.textContent = "Vergencia";
-                // Cambiar color para dar feedback de profundidad
-                const blue = 255;
-                const red = Math.abs(z) < 1 ? 255 : 0;
-                target.setAttribute('color', `rgb(${red}, 242, ${blue})`);
+                // Cambiar el brillo/intensidad para dar feedback de profundidad si es necesario
             }
 
             requestAnimationFrame(update);
