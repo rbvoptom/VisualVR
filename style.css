@@ -244,6 +244,86 @@ footer {
     opacity: 0.7;
 }
 
+.secondary-btn {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 12px;
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff4d4d;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+}
+
+.secondary-btn:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: #ff4d4d;
+}
+
+.history-card {
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.history-list {
+    margin-top: 1rem;
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-right: 0.5rem;
+}
+
+.history-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 0.8rem;
+    font-size: 0.8rem;
+    border-left: 3px solid var(--primary);
+    animation: slideIn 0.3s ease-out;
+}
+
+.history-item.incomplete {
+    border-left-color: #ff9800;
+}
+
+.history-item .date {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    margin-bottom: 0.2rem;
+}
+
+.history-item .details {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.empty-msg {
+    text-align: center;
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.8rem;
+    padding: 1rem;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 @media (max-width: 768px) {
     .dashboard {
         grid-template-columns: 1fr;

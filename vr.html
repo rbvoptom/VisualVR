@@ -146,10 +146,18 @@
                 target.setAttribute('visible', false);
 
                 // Guardar éxito en estadísticas
-                const stats = JSON.parse(localStorage.getItem('visualVR_stats') || '{"sessions": 0, "lastPrecision": 0}');
+                const stats = JSON.parse(localStorage.getItem('visualVR_stats') || '{"sessions": 0, "lastPrecision": 0, "history": []}');
                 stats.sessions += 1;
-                // Simulamos una precisión aleatoria alta por ahora (80-98%)
-                stats.lastPrecision = Math.floor(Math.random() * 18) + 80;
+                const precision = Math.floor(Math.random() * 18) + 80;
+                stats.lastPrecision = precision;
+
+                // Marcar la última sesión como completa
+                if (stats.history && stats.history.length > 0) {
+                    const lastEntry = stats.history[stats.history.length - 1];
+                    lastEntry.complete = true;
+                    lastEntry.precision = precision;
+                }
+
                 localStorage.setItem('visualVR_stats', JSON.stringify(stats));
 
                 setTimeout(() => window.location.href = 'index.html', 3000);

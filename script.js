@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('start-btn');
+    const resetBtn = document.getElementById('reset-btn');
     const exerciseType = document.getElementById('exercise-type');
     const speedInput = document.getElementById('speed');
     const speedVal = document.getElementById('speed-val');
@@ -7,15 +8,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const sizeVal = document.getElementById('size-val');
     const durationInput = document.getElementById('duration');
 
-    // Referencias a estadísticas
+    // Referencias a estadísticas e historial
     const lastPrecisionDisplay = document.getElementById('last-precision');
     const todaySessionsDisplay = document.getElementById('today-sessions');
+    const historyList = document.getElementById('history-list');
 
-    // Cargar estadísticas desde almacenamiento local
+    // Cargar estadísticas e historial
     function loadStats() {
-        const stats = JSON.parse(localStorage.getItem('visualVR_stats') || '{"sessions": 0, "lastPrecision": 0}');
+        const stats = JSON.parse(localStorage.getItem('visualVR_stats') || '{"sessions": 0, "lastPrecision": 0, "history": []}');
+
         if (todaySessionsDisplay) todaySessionsDisplay.textContent = `${stats.sessions} / 5`;
         if (lastPrecisionDisplay) lastPrecisionDisplay.textContent = stats.lastPrecision > 0 ? `${stats.lastPrecision}%` : '--';
+
+        if (historyList) {
+            if (!stats.history || stats.history.length === 0) {
+                historyList.innerHTML = '<p class="empty-msg">No hay sesiones registradas</p>';
+            } else {
+                historyList.innerHTML = stats.history.map(item => `
+                    <div class="history-item ${item.complete ? '' : 'incomplete'}">
+                        <div class="date">${item.date}</div>
+                        <div class="details">
+                            <span>${item.type.toUpperCase()}</span>
+                            <span>${item.complete ? item.precision + '%' : 'INCOMPLETA'}</span>
+                        </div>
+                    </div>
+                `).reverse().join('');
+            }
+        }
     }
 
     loadStats();
@@ -33,6 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Botón de Reinicio
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que quieres borrar todo el progreso e historial?')) {
+                localStorage.removeItem('visualVR_stats');
+                loadStats();
+            }
+        });
+    }
+
     if (startBtn) {
         startBtn.addEventListener('click', () => {
             const type = exerciseType.value;
@@ -45,6 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const background = document.getElementById('background').value;
             const distractors = document.getElementById('distractors').value;
 
+            // Registrar intento de sesión (antes de empezar por si no la termina)
+            const stats = JSON.parse(localStorage.getItem('visualVR_stats') || '{"sessions": 0, "lastPrecision": 0, "history": []}');
+            const newEntry = {
+                date: new Date().toLocaleString(),
+                type: type,
+                complete: false,
+                precision: 0
+            };
+            stats.history.push(newEntry);
+            localStorage.setItem('visualVR_stats', JSON.stringify(stats));
+
             // Intentar activar pantalla completa
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen().catch(err => {
@@ -52,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Efecto visual de carga antes de entrar
+            // Efecto visual de carga
             startBtn.textContent = "CARGANDO REALIDAD VIRTUAL...";
             startBtn.style.filter = "hue-rotate(90deg)";
 
@@ -63,14 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Efectos de hover en las tarjetas de estadísticas
+    // Efectos de hover
     const cards = document.querySelectorAll('.glass-card');
     cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
         });
