@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const duration = durationInput.value;
         const color = document.getElementById('color').value;
         const shape = document.getElementById('shape').value;
+        const pattern = document.getElementById('pattern').value;
+        const background = document.getElementById('background').value;
+        const distractors = document.getElementById('distractors').value;
 
         // Intentar activar pantalla completa
         if (document.documentElement.requestFullscreen) {
@@ -36,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startBtn.style.filter = "hue-rotate(90deg)";
 
         setTimeout(() => {
-            const url = `vr.html?type=${type}&speed=${speed}&size=${size}&duration=${duration}&color=${encodeURIComponent(color)}&shape=${shape}`;
+            const url = `vr.html?type=${type}&speed=${speed}&size=${size}&duration=${duration}&color=${encodeURIComponent(color)}&shape=${shape}&pattern=${pattern}&background=${background}&distractors=${distractors}`;
             window.location.href = url;
         }, 800);
     });
