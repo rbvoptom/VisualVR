@@ -1,0 +1,17 @@
+{
+  "name": "VisualVR",
+  "short_name": "VisualVR",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "background_color": "#05050a",
+  "theme_color": "#00f2ff",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
